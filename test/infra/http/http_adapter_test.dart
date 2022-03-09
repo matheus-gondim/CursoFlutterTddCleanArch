@@ -3,9 +3,9 @@ import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import 'package:flutter_tdd_clean_arch/data/http/http.dart';
+import 'package:flutter_clean_architecture/data/http/http.dart';
 
-import 'package:flutter_tdd_clean_arch/infra/http/http.dart';
+import 'package:flutter_clean_architecture/infra/http/http.dart';
 
 class CLientSpy extends Mock implements Client {}
 

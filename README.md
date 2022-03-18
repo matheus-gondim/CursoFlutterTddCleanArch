@@ -23,4 +23,5 @@
 
 ## Refresh App Launcher Icon
 
+    Instalar primeiramente a dependência flutter_launcher_icons
     flutter pub run flutter_launcher_icons:main

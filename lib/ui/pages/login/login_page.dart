@@ -11,7 +11,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: Builder(builder: (context) {
-      presenter.isLoadingStrem.listen((isLoading) {
+      presenter.isLoadingStream.listen((isLoading) {
         if (isLoading) {
           showDialog(
             context: context,
@@ -31,6 +31,20 @@ class LoginPage extends StatelessWidget {
           );
         } else {
           if (Navigator.canPop(context)) Navigator.of(context).pop();
+        }
+      });
+
+      presenter.mainErrorStream.listen((error) {
+        if (error != null) {
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.red[900],
+              content: Text(
+                error,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
         }
       });
 
@@ -87,7 +101,7 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     StreamBuilder<bool>(
-                      stream: presenter.isFormValidStrem,
+                      stream: presenter.isFormValidStream,
                       builder: (context, snapshot) {
                         return RaisedButton(
                           onPressed:

@@ -13,6 +13,7 @@ class ValidationComposite implements Validation {
     final error = validations
         .where((elem) => elem.field == field)
         .map((elem) => elem.validate(value))
+        .where((elem) => elem != null)
         .first;
 
     return error?.isNotEmpty == true ? error : null;

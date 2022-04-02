@@ -1,3 +1,4 @@
+import 'package:faker/faker.dart';
 import 'package:flutter_clean_architecture/valitation/protocols/protocols.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -24,5 +25,9 @@ void main() {
 
   test('Should return null if email is null', () {
     expect(sut.validate(null), null);
+  });
+
+  test('Should return null if email is valid', () {
+    expect(sut.validate(faker.internet.email()), null);
   });
 }

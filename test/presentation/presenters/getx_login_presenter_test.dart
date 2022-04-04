@@ -28,19 +28,19 @@ void main() {
       field: field == null ? anyNamed('field') : field,
       value: anyNamed('value')));
 
-  void mockValidation({String field, String value}) {
-    mockValidationCall(field).thenReturn(value);
-  }
+  void mockValidation({String field, String value}) =>
+      mockValidationCall(field).thenReturn(value);
 
   PostExpectation mockAuthenticationCall() => when(authentication.auth(any));
 
-  void mockAuthentication() {
-    mockAuthenticationCall().thenAnswer((_) async => AccountEntity(token));
-  }
+  void mockAuthentication() =>
+      mockAuthenticationCall().thenAnswer((_) async => AccountEntity(token));
 
-  void mockAuthenticationError(DomainError error) {
-    mockAuthenticationCall().thenThrow(error);
-  }
+  void mockAuthenticationError(DomainError error) =>
+      mockAuthenticationCall().thenThrow(error);
+
+  void mockSaveCurrentAccountError() =>
+      mockAuthenticationCall().thenThrow(DomainError.unexpected);
 
   setUp(() {
     validation = ValidationSpy();
@@ -153,18 +153,6 @@ void main() {
   );
 
   test(
-    'Should call SaveCurrentAccount with correct value',
-    () async {
-      sut.validateEmail(email);
-      sut.validatePassword(password);
-
-      await sut.auth();
-
-      verify(saveCurrentAccount.save(AccountEntity(token))).called(1);
-    },
-  );
-
-  test(
     'Should emit correct events on Authentication success',
     () async {
       sut.validateEmail(email);
@@ -195,6 +183,33 @@ void main() {
     'Should emit correct events on UnexpectedError',
     () async {
       mockAuthenticationError(DomainError.unexpected);
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+
+      expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+      sut.mainErrorStream.listen(expectAsync1((error) =>
+          expect(error, 'Algo erro aconteceu. Tente novamente em breve.')));
+
+      await sut.auth();
+    },
+  );
+
+  test(
+    'Should call SaveCurrentAccount with correct value',
+    () async {
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+
+      await sut.auth();
+
+      verify(saveCurrentAccount.save(AccountEntity(token))).called(1);
+    },
+  );
+
+  test(
+    'Should emit UnexpectedError if SaveCurrentAccount fails',
+    () async {
+      mockSaveCurrentAccountError();
       sut.validateEmail(email);
       sut.validatePassword(password);
 

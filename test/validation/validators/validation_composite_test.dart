@@ -1,5 +1,5 @@
 import 'package:flutter_clean_architecture/valitation/protocols/protocols.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:flutter_clean_architecture/valitation/validators/validators.dart';

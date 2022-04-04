@@ -13,7 +13,7 @@ class ValidationComposite implements Validation {
     String error;
     for (final validation in validations.where((v) => v.field == field)) {
       error = validation.validate(value);
-      if (error != null) return error;
+      if (error != null && error != '') return error;
     }
     return error;
   }

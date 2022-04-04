@@ -8,8 +8,8 @@ void main() {
     final validations = makeLoginValidations();
 
     expect(validations, [
-      EmailValidation('email'),
       RequiredFieldValidation('email'),
+      EmailValidation('email'),
       RequiredFieldValidation('password'),
     ]);
   });

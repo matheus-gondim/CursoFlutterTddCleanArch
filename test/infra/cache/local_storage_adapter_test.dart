@@ -64,5 +64,13 @@ void main() {
 
       expect(fetchedValue, value);
     });
+
+    test('Should thorw if fetch secure thorws', () {
+      mockFetchSecureError();
+
+      final future = sut.fetchSecure(key);
+
+      expect(future, throwsA(TypeMatcher<Exception>()));
+    });
   });
 }

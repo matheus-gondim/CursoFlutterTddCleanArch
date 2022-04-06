@@ -1,15 +1,12 @@
 import 'package:faker/faker.dart';
-import 'package:flutter_clean_architecture/domain/helpers/domain_error.dart';
 import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:meta/meta.dart';
 
+import 'package:flutter_clean_architecture/data/cache/cache.dart';
+import 'package:flutter_clean_architecture/domain/helpers/domain_error.dart';
 import 'package:flutter_clean_architecture/domain/entities/entities.dart';
 import 'package:flutter_clean_architecture/domain/usecases/usecases.dart';
-
-abstract class FetchSecureCacheStorage {
-  Future<String> fetchSecure(String key);
-}
 
 class FetchSecureCacheStorageSpy extends Mock
     implements FetchSecureCacheStorage {}

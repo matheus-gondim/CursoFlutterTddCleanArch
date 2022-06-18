@@ -18,6 +18,7 @@ class GetxSplashPresenter implements SplashPresenter {
 
   Future<void> checkAccount() async {
     await loadCurrentAccount.load();
+    _navigateTo.value = "/surveys";
   }
 }
 
@@ -33,11 +34,14 @@ void main() {
   });
 
   test("Should call LoadCurrentAccount", () async {
-    loadCurrentAccount = LoadCurrentAccountSpy();
-    sut = GetxSplashPresenter(loadCurrentAccount: loadCurrentAccount);
-
     await sut.checkAccount();
 
     verify(loadCurrentAccount.load()).called(1);
+  });
+
+  test("Should go to surveys page on success", () async {
+    sut.navigateToStream
+        .listen(expectAsync1((page) => expect(page, "/surveys")));
+    await sut.checkAccount();
   });
 }

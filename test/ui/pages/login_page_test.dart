@@ -274,7 +274,7 @@ void main() {
       mainErrorController.add(UIError.invalidCredentials);
       await tester.pump();
 
-      expect(find.text("Credencias inválidas."), findsOneWidget);
+      expect(find.text("Credenciais inválidas."), findsOneWidget);
     },
   );
 
@@ -286,7 +286,7 @@ void main() {
       mainErrorController.add(UIError.unexpected);
       await tester.pump();
 
-      expect(find.text("Algo erro aconteceu. Tente novamente em breve."),
+      expect(find.text("Algo errado aconteceu. Tente novamente em breve."),
           findsOneWidget);
     },
   );

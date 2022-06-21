@@ -4,9 +4,11 @@ import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import 'package:flutter_clean_architecture/domain/helpers/helpers.dart';
+import 'package:flutter_clean_architecture/domain/usecases/usecases.dart';
+
 import 'package:flutter_clean_architecture/data/http/http.dart';
 import 'package:flutter_clean_architecture/data/usecases/usecases.dart';
-import 'package:flutter_clean_architecture/domain/usecases/usecases.dart';
 
 class HttpClientSpy extends Mock implements HttpClient {}
 
@@ -15,6 +17,16 @@ void main() {
   HttpClientSpy httpClient;
   String url;
   AddAccountParams params;
+
+  PostExpectation mockRequest() => when(httpClient.request(
+        url: anyNamed('url'),
+        method: anyNamed('method'),
+        body: anyNamed('body'),
+      ));
+
+  void mockHttpError(HttpError error) {
+    mockRequest().thenThrow(error);
+  }
 
   setUp(() {
     httpClient = HttpClientSpy();
@@ -41,5 +53,13 @@ void main() {
         'passwordConfirmation': params.passwordConfirmation,
       },
     ));
+  });
+
+  test('Should throw UnexpectedError if HttpClient returns 400', () async {
+    mockHttpError(HttpError.badRequest);
+
+    final future = sut.add(params);
+
+    expect(future, throwsA(DomainError.unexpected));
   });
 }

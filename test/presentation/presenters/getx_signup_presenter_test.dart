@@ -4,6 +4,7 @@ import 'package:mockito/mockito.dart';
 
 import 'package:flutter_clean_architecture/ui/helpers/errors/errors.dart';
 
+import 'package:flutter_clean_architecture/domain/helpers/helpers.dart';
 import 'package:flutter_clean_architecture/domain/entities/entities.dart';
 import 'package:flutter_clean_architecture/domain/usecases/usecases.dart';
 
@@ -38,6 +39,9 @@ void main() {
 
   void mockAddAccount() =>
       mockAddAccountCall().thenAnswer((_) async => AccountEntity(token));
+
+  void mockSaveCurrentAccountError() =>
+      mockAddAccountCall().thenThrow(DomainError.unexpected);
 
   setUp(() {
     validation = ValidationSpy();
@@ -257,5 +261,19 @@ void main() {
     await sut.signUp();
 
     verify(saveCurrentAccount.save(AccountEntity(token))).called(1);
+  });
+
+  test('Should emit UnexpectedError if SaveCurrentAccount fails', () async {
+    mockSaveCurrentAccountError();
+    sut.validateName(name);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+    sut.validatePasswordConfirmation(passwordConfirmation);
+
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+    sut.mainErrorStream
+        .listen(expectAsync1((error) => expect(error, UIError.unexpected)));
+
+    await sut.signUp();
   });
 }

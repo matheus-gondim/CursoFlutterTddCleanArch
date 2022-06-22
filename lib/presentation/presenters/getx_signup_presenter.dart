@@ -2,13 +2,14 @@ import 'package:get/get.dart';
 import 'package:meta/meta.dart';
 
 import '../../ui/helpers/errors/errors.dart';
+import '../../ui/pages/pages.dart';
 
 import '../../domain/usecases/usecases.dart';
 import '../../domain/helpers/domain_error.dart';
 
 import '../protocols/protocols.dart';
 
-class GetxSignUpPresenter extends GetxController {
+class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
   final Validation validation;
   final AddAccount addAccount;
   final SaveCurrentAccount saveCurrentAccount;
@@ -18,6 +19,7 @@ class GetxSignUpPresenter extends GetxController {
   var _passwordError = Rx<UIError>();
   var _passwordConfirmationError = Rx<UIError>();
   var _mainError = Rx<UIError>();
+  var _navigateTo = RxString();
   var _isFormValid = false.obs;
   var _isLoading = false.obs;
 
@@ -32,6 +34,7 @@ class GetxSignUpPresenter extends GetxController {
   Stream<UIError> get passwordConfirmationErrorStream =>
       _passwordConfirmationError.stream;
   Stream<UIError> get mainErrorStream => _mainError.stream;
+  Stream<String> get navigateToStream => _navigateTo.stream;
   Stream<bool> get isFormValidStream => _isFormValid.stream;
   Stream<bool> get isLoadingStream => _isLoading.stream;
 
@@ -99,6 +102,7 @@ class GetxSignUpPresenter extends GetxController {
         passwordConfirmation: _passwordConfirmation,
       ));
       await saveCurrentAccount.save(account);
+      _navigateTo.value = '/surveys';
     } on DomainError catch (error) {
       switch (error) {
         case DomainError.emailInUse:

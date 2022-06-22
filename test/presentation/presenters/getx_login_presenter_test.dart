@@ -1,7 +1,8 @@
-import 'package:flutter_clean_architecture/ui/helpers/errors/errors.dart';
 import 'package:test/test.dart';
 import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
+
+import 'package:flutter_clean_architecture/ui/helpers/errors/errors.dart';
 
 import 'package:flutter_clean_architecture/domain/entities/entities.dart';
 import 'package:flutter_clean_architecture/domain/usecases/usecases.dart';
@@ -126,27 +127,6 @@ void main() {
     sut.validatePassword(password);
   });
 
-  test('Should emit form invalid event if any field is invalid', () {
-    mockValidation(field: 'email', value: ValidationError.invalidField);
-
-    sut.isFormValidStream
-        .listen(expectAsync1((isValid) => expect(isValid, false)));
-
-    sut.validateEmail(email);
-    sut.validatePassword(password);
-  });
-
-  test('Should emit form valid event if form is valid', () async {
-    sut.emailErrorStream.listen(expectAsync1((error) => expect(error, null)));
-    sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, null)));
-    expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
-
-    sut.validateEmail(email);
-    await Future.delayed(Duration.zero);
-    sut.validatePassword(password);
-  });
-
   test('Should enable form button if all fields are valid', () async {
     expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
     sut.validateEmail(email);
@@ -154,99 +134,78 @@ void main() {
     sut.validatePassword(password);
   });
 
-  test(
-    'Should call Authentication with correct values',
-    () async {
-      sut.validateEmail(email);
-      sut.validatePassword(password);
+  test('Should call Authentication with correct values', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
 
-      await sut.auth();
+    await sut.auth();
 
-      verify(authentication
-              .auth(AuthenticationParams(email: email, secret: password)))
-          .called(1);
-    },
-  );
+    verify(authentication
+            .auth(AuthenticationParams(email: email, secret: password)))
+        .called(1);
+  });
 
-  test(
-    'Should emit correct events on Authentication success',
-    () async {
-      sut.validateEmail(email);
-      sut.validatePassword(password);
+  test('Should emit correct events on Authentication success', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
 
-      expectLater(sut.isLoadingStream, emits(true));
+    expectLater(sut.isLoadingStream, emits(true));
 
-      await sut.auth();
-    },
-  );
+    await sut.auth();
+  });
 
-  test(
-    'Should emit correct events on InvalidCredentialsError',
-    () async {
-      mockAuthenticationError(DomainError.invalidCredentials);
-      sut.validateEmail(email);
-      sut.validatePassword(password);
+  test('Should emit correct events on InvalidCredentialsError', () async {
+    mockAuthenticationError(DomainError.invalidCredentials);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
 
-      expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
-      sut.mainErrorStream.listen(
-          expectAsync1((error) => expect(error, UIError.invalidCredentials)));
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+    sut.mainErrorStream.listen(
+        expectAsync1((error) => expect(error, UIError.invalidCredentials)));
 
-      await sut.auth();
-    },
-  );
+    await sut.auth();
+  });
 
-  test(
-    'Should emit correct events on UnexpectedError',
-    () async {
-      mockAuthenticationError(DomainError.unexpected);
-      sut.validateEmail(email);
-      sut.validatePassword(password);
+  test('Should emit correct events on UnexpectedError', () async {
+    mockAuthenticationError(DomainError.unexpected);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
 
-      expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
-      sut.mainErrorStream
-          .listen(expectAsync1((error) => expect(error, UIError.unexpected)));
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+    sut.mainErrorStream
+        .listen(expectAsync1((error) => expect(error, UIError.unexpected)));
 
-      await sut.auth();
-    },
-  );
+    await sut.auth();
+  });
 
-  test(
-    'Should call SaveCurrentAccount with correct value',
-    () async {
-      sut.validateEmail(email);
-      sut.validatePassword(password);
+  test('Should call SaveCurrentAccount with correct value', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
 
-      await sut.auth();
+    await sut.auth();
 
-      verify(saveCurrentAccount.save(AccountEntity(token))).called(1);
-    },
-  );
+    verify(saveCurrentAccount.save(AccountEntity(token))).called(1);
+  });
 
-  test(
-    'Should emit UnexpectedError if SaveCurrentAccount fails',
-    () async {
-      mockSaveCurrentAccountError();
-      sut.validateEmail(email);
-      sut.validatePassword(password);
+  test('Should emit UnexpectedError if SaveCurrentAccount fails', () async {
+    mockSaveCurrentAccountError();
+    sut.validateEmail(email);
+    sut.validatePassword(password);
 
-      expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
-      sut.mainErrorStream
-          .listen(expectAsync1((error) => expect(error, UIError.unexpected)));
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+    sut.mainErrorStream
+        .listen(expectAsync1((error) => expect(error, UIError.unexpected)));
 
-      await sut.auth();
-    },
-  );
+    await sut.auth();
+  });
 
-  test(
-    'Should change page on success',
-    () async {
-      sut.validateEmail(email);
-      sut.validatePassword(password);
+  test('Should change page on success', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
 
-      sut.navigateToStream
-          .listen(expectAsync1((page) => expect(page, '/surveys')));
+    sut.navigateToStream
+        .listen(expectAsync1((page) => expect(page, '/surveys')));
 
-      await sut.auth();
-    },
-  );
+    await sut.auth();
+  });
 }

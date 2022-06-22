@@ -9,7 +9,7 @@ class PasswordConfirmationInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final presenter = Provider.of<SignUpPresenter>(context);
 
-    return StreamBuilder<Object>(
+    return StreamBuilder<UIError>(
       stream: presenter.passwordConfirmationErrorStream,
       builder: (context, snapshot) {
         return TextFormField(
@@ -19,6 +19,7 @@ class PasswordConfirmationInput extends StatelessWidget {
               Icons.lock,
               color: Theme.of(context).primaryColorLight,
             ),
+            errorText: snapshot.hasData ? snapshot.data.description : null,
           ),
           obscureText: true,
           onChanged: presenter.validatePasswordConfirmation,

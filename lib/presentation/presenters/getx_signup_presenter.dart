@@ -115,4 +115,8 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
       _isLoading.value = false;
     }
   }
+
+  void goToLogin() {
+    _navigateTo.value = '/login';
+  }
 }

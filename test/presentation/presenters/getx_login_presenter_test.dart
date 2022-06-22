@@ -147,6 +147,13 @@ void main() {
     sut.validatePassword(password);
   });
 
+  test('Should enable form button if all fields are valid', () async {
+    expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
+    sut.validateEmail(email);
+    await Future.delayed(Duration.zero);
+    sut.validatePassword(password);
+  });
+
   test(
     'Should call Authentication with correct values',
     () async {

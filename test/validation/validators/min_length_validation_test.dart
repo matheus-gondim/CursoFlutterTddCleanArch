@@ -1,3 +1,4 @@
+import 'package:faker/faker.dart';
 import 'package:flutter_clean_architecture/presentation/protocols/protocols.dart';
 import 'package:test/test.dart';
 
@@ -11,12 +12,17 @@ void main() {
   });
 
   test('Should return error if value is empty', () {
-    final error = sut.validate('');
-    expect(error, ValidationError.invalidField);
+    expect(sut.validate(''), ValidationError.invalidField);
   });
 
   test('Should return error if value is null', () {
-    final error = sut.validate(null);
-    expect(error, ValidationError.invalidField);
+    expect(sut.validate(null), ValidationError.invalidField);
+  });
+
+  test('Should return error if value is less than min size', () {
+    expect(
+      sut.validate(faker.randomGenerator.string(4, min: 1)),
+      ValidationError.invalidField,
+    );
   });
 }

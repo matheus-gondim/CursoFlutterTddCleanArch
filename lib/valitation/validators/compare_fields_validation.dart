@@ -17,6 +17,6 @@ class CompareFieldsValidation extends Equatable implements FieldValidation {
   });
 
   ValidationError validate(String value) {
-    return ValidationError.invalidField;
+    return valueToCompare == value ? null : ValidationError.invalidField;
   }
 }

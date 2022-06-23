@@ -58,6 +58,10 @@ void main() {
     mockRequest().thenAnswer((_) async => data);
   }
 
+  void mockHttpError(HttpError error) {
+    mockRequest().thenThrow(error);
+  }
+
   setUp(() {
     httpClient = HttpClientSky();
     url = faker.internet.httpUrl();
@@ -105,4 +109,12 @@ void main() {
       expect(future, throwsA(DomainError.unexpected));
     },
   );
+
+  test('Should throw UnexpectedError if HttpClient returns 404', () async {
+    mockHttpError(HttpError.notFound);
+
+    final future = sut.load();
+
+    expect(future, throwsA(DomainError.unexpected));
+  });
 }

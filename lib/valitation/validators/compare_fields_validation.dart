@@ -7,16 +7,18 @@ import '../protocols/protocols.dart';
 
 class CompareFieldsValidation extends Equatable implements FieldValidation {
   final String field;
-  final String valueToCompare;
+  final String fieldToCompare;
 
   List get props => [field];
 
   CompareFieldsValidation({
     @required this.field,
-    @required this.valueToCompare,
+    @required this.fieldToCompare,
   });
 
-  ValidationError validate(String value) {
-    return valueToCompare == value ? null : ValidationError.invalidField;
+  ValidationError validate(Map input) {
+    return input[fieldToCompare] == input[field]
+        ? null
+        : ValidationError.invalidField;
   }
 }

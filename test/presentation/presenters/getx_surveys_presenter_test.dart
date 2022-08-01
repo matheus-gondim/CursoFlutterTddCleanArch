@@ -3,9 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:flutter_clean_architecture/domain/entities/entities.dart';
+import 'package:flutter_clean_architecture/domain/helpers/helpers.dart';
 import 'package:flutter_clean_architecture/domain/usecases/usecases.dart';
 
 import 'package:flutter_clean_architecture/ui/pages/pages.dart';
+import 'package:flutter_clean_architecture/ui/helpers/helpers.dart';
 
 import 'package:flutter_clean_architecture/presentation/presenters/presenters.dart';
 
@@ -31,10 +33,15 @@ void main() {
         ),
       ];
 
+  PostExpectation mockLoadSurveyCall() => when(loadSurveys.load());
+
   void mockLoadSurveys(List<SurveyEntity> data) {
     mockSurveys = data;
-    when(loadSurveys.load()).thenAnswer((_) async => data);
+    mockLoadSurveyCall().thenAnswer((_) async => data);
   }
+
+  mockLoadSurveysError() =>
+      mockLoadSurveyCall().thenThrow(DomainError.unexpected);
 
   setUp(() {
     loadSurveys = LoadSurveysSpy();
@@ -65,6 +72,18 @@ void main() {
             didAnswer: mockSurveys[1].didAnswer,
           ),
         ])));
+    await sut.loadData();
+  });
+
+  test('Should emit correct events on failure', () async {
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+
+    mockLoadSurveysError();
+
+    sut.surveysStream.listen(null,
+        onError: expectAsync1(
+          (error) => expect(error, UIError.unexpected.description),
+        ));
     await sut.loadData();
   });
 }

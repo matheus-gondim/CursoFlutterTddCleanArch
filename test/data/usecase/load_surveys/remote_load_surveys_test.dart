@@ -8,7 +8,7 @@ import 'package:flutter_clean_architecture/domain/helpers/helpers.dart';
 import 'package:flutter_clean_architecture/data/http/http.dart';
 import 'package:flutter_clean_architecture/data/usecases/usecases.dart';
 
-class HttpClientSky extends Mock implements HttpClient<List<Map>> {}
+class HttpClientSky extends Mock implements HttpClient {}
 
 void main() {
   String url;

@@ -46,17 +46,29 @@ void main() {
     });
 
     test('Should call post with correct values', () async {
-      await sut.request(
-        url: url,
-        method: 'post',
-        body: {'any_key': 'any_value'},
-      );
+      const body = {'any_key': 'any_value'};
 
+      await sut.request(url: url, method: 'post', body: body);
       verify(client.post(
         url,
         headers: {
           'content-type': 'application/json',
           'accept': 'application/json'
+        },
+        body: '{"any_key":"any_value"}',
+      ));
+
+      await sut.request(
+          url: url,
+          method: 'post',
+          body: body,
+          headers: {'any_headers': 'any_value'});
+      verify(client.post(
+        url,
+        headers: {
+          'content-type': 'application/json',
+          'accept': 'application/json',
+          'any_headers': 'any_value',
         },
         body: '{"any_key":"any_value"}',
       ));
@@ -181,6 +193,17 @@ void main() {
         headers: {
           'content-type': 'application/json',
           'accept': 'application/json'
+        },
+      ));
+
+      await sut.request(
+          url: url, method: 'get', headers: {'any_headers': 'any_value'});
+      verify(client.get(
+        url,
+        headers: {
+          'content-type': 'application/json',
+          'accept': 'application/json',
+          'any_headers': 'any_value',
         },
       ));
     });

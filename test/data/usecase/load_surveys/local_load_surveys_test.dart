@@ -1,15 +1,13 @@
 import 'package:faker/faker.dart';
-import 'package:flutter_clean_architecture/domain/helpers/domain_error.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:meta/meta.dart';
 
+import 'package:flutter_clean_architecture/data/cache/cache.dart';
 import 'package:flutter_clean_architecture/data/models/models.dart';
-import 'package:flutter_clean_architecture/domain/entities/entities.dart';
 
-abstract class FetchCacheStorage {
-  Future<dynamic> fetch(String key);
-}
+import 'package:flutter_clean_architecture/domain/entities/entities.dart';
+import 'package:flutter_clean_architecture/domain/helpers/domain_error.dart';
 
 class LocalLoadSurveys {
   final FetchCacheStorage fetchCacheStorage;

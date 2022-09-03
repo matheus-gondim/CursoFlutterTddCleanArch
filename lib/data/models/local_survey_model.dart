@@ -1,3 +1,4 @@
+import 'package:flutter_clean_architecture/domain/helpers/domain_error.dart';
 import 'package:meta/meta.dart';
 
 import '../../domain/entities/entities.dart';
@@ -19,7 +20,7 @@ class LocalSurveyModel {
 
   factory LocalSurveyModel.fromJson(Map json) {
     if (!json.keys.toSet().containsAll(['id', 'date', 'question', 'didAnswer']))
-      throw HttpError.invalidData;
+      throw DomainError.unexpected;
 
     return LocalSurveyModel(
       id: json['id'],
